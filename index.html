@@ -1,0 +1,82 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>畫畫接龍入口</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<style>
+  /* Layout: centered column, 12 group tiles in a wrapping grid; one tile = one Excalidraw room */
+  :root{
+    --bg:#f7f5f0; --surface:#ffffff; --fg:#23212b; --muted:#6f6b7a;
+    --line:#e4dfd3; --accent:#e4572e; --accent-fg:#ffffff; --chip:#ffd166; --chip-fg:#3a2c00;
+    --font:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1b1a21; --surface:#26242d; --fg:#f2efe8; --muted:#a8a3b3;
+      --line:#38353f; --accent:#ff7a59; --accent-fg:#1b1a21; --chip:#ffd166; --chip-fg:#3a2c00;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1b1a21; --surface:#26242d; --fg:#f2efe8; --muted:#a8a3b3;
+    --line:#38353f; --accent:#ff7a59; --accent-fg:#1b1a21; --chip:#ffd166; --chip-fg:#3a2c00;
+    color-scheme:dark;
+  }
+  body{background:var(--bg); color:var(--fg); font-family:var(--font); line-height:1.6;
+       padding-inline:16px; padding-block:40px 56px; font-size:16px}
+  .wrap{max-width:900px; margin-inline:auto}
+  header{display:flex; flex-direction:column; gap:8px; margin-bottom:28px}
+  .tag{align-self:flex-start; background:var(--chip); color:var(--chip-fg); font-size:13px;
+       font-weight:700; letter-spacing:.06em; padding:2px 12px; border-radius:999px}
+  h1{margin:0; font-size:clamp(30px,7vw,44px); font-weight:900; letter-spacing:.02em; text-wrap:balance; line-height:1.2}
+  header p{margin:0; color:var(--muted)}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr)); gap:12px}
+  a.tile{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; min-width:0;
+    padding:16px 18px; background:var(--surface); border:1.5px solid var(--line); border-radius:12px;
+    color:var(--fg); text-decoration:none; transition:transform .15s, border-color .15s;
+  }
+  a.tile:hover{transform:translateY(-2px); border-color:var(--accent)}
+  a.tile:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+  .name{display:flex; flex-direction:column}
+  .name b{font-size:22px; font-weight:900; font-variant-numeric:tabular-nums}
+  .name span{font-size:13px; color:var(--muted)}
+  .go{flex:none; width:34px; height:34px; border-radius:50%; background:var(--accent); color:var(--accent-fg);
+      display:grid; place-items:center; font-weight:700}
+  footer{margin-top:28px; color:var(--muted); font-size:14px}
+  @media (prefers-reduced-motion: reduce){ a.tile{transition:none} a.tile:hover{transform:none} }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="tag">Excalidraw 協作白板</span>
+    <h1>畫畫接龍</h1>
+    <p>點選自己的組別進入白板，會在新分頁開啟。</p>
+  </header>
+  <main class="grid" id="grid"></main>
+  <footer>進入後請依照老師指示的順序輪流作畫。</footer>
+</div>
+
+<script>
+  var rooms = [
+    ["G1","https://excalidraw.com/#room=1a255b09341b4b28934f,lIWH8Cjf7ZCImHe8fqeINA"],
+    ["G2","https://excalidraw.com/#room=2ef62d9dd755ec26ed97,9fJ4-rXZhBgG-o2sxC-jqA"],
+    ["G3","https://excalidraw.com/#room=7f8d9184413648b98a99,kL1BX8-PlWdjg_PPR379PA"],
+    ["G4","https://excalidraw.com/#room=da88e3642975aa155893,baOzZIaTcdG62APg3G5xuA"],
+    ["G5","https://excalidraw.com/#room=199d6ed72b80a80121f3,cc9Fc2t-x2yHPJ7iJbFaZQ"],
+    ["G6","https://excalidraw.com/#room=51815fb0582d2e21dbd3,rWRAIdcIpiH1Wu4FlpPrTw"],
+    ["G7","https://excalidraw.com/#room=f906d915c3d2ccba6002,TwmTmeDCf9fwEIkdy8oNRw"],
+    ["G8","https://excalidraw.com/#room=118d756d3d74d35d11b0,deFsN8xiwiHsXdqWgMfo1Q"],
+    ["G9","https://excalidraw.com/#room=28aab97954ddbc22421d,YAA_6bHQY0bAjxK8XkwPvQ"],
+    ["G10","https://excalidraw.com/#room=26a22eabf7c6cb8cd261,YkVTyvyaoJNZxBD2XoR2BA"],
+    ["G11","https://excalidraw.com/#room=e11d72f8846810031447,HaClx_jPzPXcC8EHKhdhAg"],
+    ["G12","https://excalidraw.com/#room=b739c4e3e248192a5cf6,BI3L_8_U6BWRPTL8vFsH1A"]
+  ];
+  var grid = document.getElementById("grid");
+  rooms.forEach(function(r){
+    var a = document.createElement("a");
+    a.className = "tile"; a.href = r[1]; a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.innerHTML = '<span class="name"><b>' + r[0] + ' 組</b><span>進入白板</span></span><span class="go" aria-hidden="true">→</span>';
+    grid.appendChild(a);
+  });
+</script>
+
+</body></html>
